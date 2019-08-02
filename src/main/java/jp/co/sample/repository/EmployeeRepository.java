@@ -11,11 +11,10 @@ import org.springframework.stereotype.Repository;
 
 import jp.co.sample.domain.Employee;
 
-
 /**
- * employeeテーブルを操作するリポジトリ
+ * employeeテーブルを操作するリポジトリ.
  * 
- * @author rksuser
+ * @author wakako.otsuka
  *
  */
 @Repository
@@ -24,7 +23,7 @@ public class EmployeeRepository {
 	private NamedParameterJdbcTemplate template;
 
 	private static final RowMapper<Employee> Employee_ROW_MAPPER = (rs, i) -> {
-		Employee employee =new Employee();
+		Employee employee = new Employee();
 		employee.setId(rs.getInt("id"));
 		employee.setName(rs.getString("name"));
 		employee.setImage(rs.getString("image"));
@@ -37,46 +36,45 @@ public class EmployeeRepository {
 		employee.setSalary(rs.getInt("salary"));
 		employee.setCharacteristics(rs.getString("characteristics"));
 		employee.setDependentsCount(rs.getInt("dependentsCount"));
-		
+
 		return employee;
 	};
-	
-	public List<Employee> findAll(){
-		String sql="SELECT id,name,image,gender,hiredate,mailAddress,zipCode,setAddress,telephone,salary,characteristics,dependentsCount,"
+
+	public List<Employee> findAll() {
+		String sql = "SELECT id,name,image,gender,hiredate,mailAddress,zipCode,setAddress,telephone,salary,characteristics,dependentsCount,"
 				+ "FROM employees ORDER BY HireDate;";
 
-	List<Employee>employeeList=template.query(sql,Employee_ROW_MAPPER);
+		List<Employee> employeeList = template.query(sql, Employee_ROW_MAPPER);
 
-			if(employeeList.size() != 0) {
-				return employeeList;
-
-			}else {
-				return null;
+		return employeeList;
 		
+//		if (employeeList.size() != 0) {
+//			return employeeList;
+//
+//		} else {
+//			return null;
+//
+//		}
 	}
-}
-	
+
 	public Employee load(Integer id) {
-		String sql="SELECT id,name,image,gender,hiredate,mailAddress,zipCode,setAddress,telephone,salary,characteristics,dependentsCount"
+		String sql = "SELECT id,name,image,gender,hiredate,mailAddress,zipCode,setAddress,telephone,salary,characteristics,dependentsCount"
 				+ "FROM employees WHERE id=:id;";
-		
-		SqlParameterSource param = new MapSqlParameterSource();
-	
-		Employee employee = template.queryForObject(sql, param, Employee_ROW_MAPPER);	
-		
-		return employee;
-		}
-	
-	public void update(Employee employee) {
-		String sql="UPDATE employees SET dependentsCount=:dependentsCount WGERE id=:id; ";
-		
-		
-		SqlParameterSource param = new MapSqlParameterSource();
-		
-		template.update(sql, param);	
-		
-		
-	}
-	
-}
 
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+
+		Employee employee = template.queryForObject(sql, param, Employee_ROW_MAPPER);
+
+		return employee;
+	}
+
+	public void update(Employee employee) {
+		String sql = "UPDATE employees SET dependentsCount=:dependentsCount WHERE id=:id; ";
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", employee.getId()).addValue("dependentsCount", employee.getDependentsCount());
+
+		template.update(sql, param);
+
+	}
+
+}

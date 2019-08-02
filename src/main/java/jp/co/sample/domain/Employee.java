@@ -2,13 +2,15 @@ package jp.co.sample.domain;
 
 /**
  * 
- * 従業員情報を示すドメイン
- * @author rksuser
+ * 従業員情報を示すドメイン.
+ * 
+ * @author wakako.otsuka
  *
  */
 public class Employee {
-	
+	/** ID */
 	private Integer id;
+	/** 名前 */
 	private String name;
 	private String image;
 	private String gender;
